@@ -8,7 +8,7 @@ function RightBar() {
         <div className="flex gap-3">
           <img
             className="w-[44px] h-[44px] rounded-full object-cover"
-            crossorigin="anonymous"
+            crossOrigin="anonymous"
             draggable="false"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhTOyPSYEY5Du1YdayQiHaEWtqRcEnGLn9dg&s"
           />
@@ -21,14 +21,14 @@ function RightBar() {
           Switch
         </div>
       </div>
-      <div className="flex items-center justify-between mt-6 px-4 py-1">
-        <div className="text-sm font-semibold text-[#9C9C9C]">
+      <div className="flex items-center justify-between mt-4 px-4 py-1">
+        <div className="text-sm font-semibold text-[#9C9C9C] mb-2">
           Suggested for you
         </div>
         <div className="text-[12px] font-semibold">See All</div>
       </div>
       {RightMenu.map((item, index) => (
-        <div className="flex justify-between items-center px-4 py-2">
+        <div className="flex justify-between items-center px-4 py-2" key={index}>
           <div className="flex gap-3">
             <img
               className="w-[44px] h-[44px] rounded-full object-cover"

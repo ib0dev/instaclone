@@ -22,10 +22,12 @@ function Home() {
 
     fetchPosts();
   }, []);
+  console.log(posts);
   return (
     <div className="mt-4">
       {posts.map((post, index) => (
         <PostCard
+          key={index}
           postProfileImg={post.postProfileImg}
           postImageUrl={post.postImageUrl}
           postUserName={post.postUserName}
