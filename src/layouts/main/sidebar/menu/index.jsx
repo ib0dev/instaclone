@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router";
-
+import { IoClose } from "react-icons/io5";
 import {
   Button,
   Description,
   Dialog,
   DialogPanel,
-  DialogTitle,
   Field,
   Label,
   Popover,
@@ -27,6 +26,7 @@ import { mainMenu } from "@/utils/consts";
 import useTheme from "@/hooks/useTheme";
 import { clsx } from "clsx";
 import { CreateIcon, MorePostIcon, MediaIcon } from "@/assets/icons/allicons";
+import useClickOutside from "@/hooks/use-click-outside";
 function SidebarMenu() {
   const { theme, changeTheme } = useTheme();
 
@@ -50,6 +50,8 @@ function SidebarMenu() {
   function close() {
     setIsOpen(false);
   }
+
+  const ref = useClickOutside(() => {close})
 
   return (
     <div className="flex flex-col justify-between">
@@ -86,21 +88,16 @@ function SidebarMenu() {
         >
           <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 flex-col">
-              
               <DialogPanel
                 transition
                 className="w-[537px] h-[543px] bg-[#262626] flex justify-center flex-col items-center"
               >
-                
                 <p className="mt-2 text-sm/6 text-white/50">
                   <MediaIcon />
                 </p>
                 <p className="text-xl ">Drag photos and videos here</p>
                 <div className="mt-4">
-                  <Button
-                    className="inline-flex items-center gap-2 rounded-md py-1.5 px-3 text-sm/6 font-semibold bg-[#0095f6] shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-[#1877F2] data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
-                    
-                  >
+                  <Button className="inline-flex items-center gap-2 rounded-md py-1.5 px-3 text-sm/6 font-semibold bg-[#0095f6] shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-[#1877F2] data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700">
                     Select From Computer
                   </Button>
                 </div>
@@ -162,9 +159,19 @@ function SidebarMenu() {
           </PopoverPanel>
         </Popover>
         {showAppearancePanel && (
-          <div className="absolute bottom-[230px] left-[260px] z-10 w-[230px] bg-[#353535] p-4 rounded-xl shadow-lg">
+          <div className="absolute bottom-[230px] left-[260px] z-10 w-[230px] bg-[#353535] p-4 rounded-xl shadow-lg" ref={ref}>
             <Field>
-              <Label className="text-sm/6 font-medium text-white">Theme</Label>
+              <div className="p-6 bg-white text-black dark:bg-black dark:text-white">
+                <h1 className="text-2xl font-bold">Hello Theme!</h1>
+              </div>
+              <Label className="text-sm/6 font-medium text-white flex items-center justify-between">
+                <div>Theme</div>
+                <IoClose
+                  className="size-4 fill-white/60"
+                  aria-hidden="true"
+                  onClick={closeAppearancePanel}
+                />
+              </Label>
               <Description className="text-sm/6 text-white/50">
                 Choose theme appearance
               </Description>
@@ -180,10 +187,6 @@ function SidebarMenu() {
                   <option value="light">Light</option>
                   <option value="system">System</option>
                 </Select>
-                <MorePostIcon
-                  className="pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
-                  aria-hidden="true"
-                />
               </div>
             </Field>
           </div>
