@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import { auth } from "../../firebase/config";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
 
-const InstagramLogin = () => {
+const InstagramSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      console.log("User logged in successfully");
-      navigate("/");
+      await createUserWithEmailAndPassword(auth, email, password);
+      console.log("User signed up successfully");
+      navigate("/"); // Redirect to home page after signup
     } catch (err) {
       setError(err.message);
-      console.error("Login error:", err.message);
+      console.error("Signup error:", err.message);
     }
   };
 
@@ -37,7 +37,7 @@ const InstagramLogin = () => {
 
         {/* Content Section */}
         <div className="flex flex-col items-center w-full max-w-sm">
-          {/* Login Box */}
+          {/* Signup Box */}
           <div className="bg-white border border-gray-300 rounded-sm w-full p-6 mb-2">
             <div className="text-center mb-6">
               <a href="https://ibb.co/XtKd6c7">
@@ -48,14 +48,14 @@ const InstagramLogin = () => {
                 />
               </a>
             </div>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleSignup} className="space-y-4">
               <div className="relative">
                 <input
-                  type="text"
+                  type="email"
                   required
                   className="w-full bg-gray-50 border border-gray-300 rounded-sm px-2 py-3 text-[12px] focus:outline-none peer"
-                  id="uname"
-                  placeholder="Phone number, username, or email"
+                  id="email"
+                  placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -78,38 +78,20 @@ const InstagramLogin = () => {
                 type="submit"
                 className="w-full bg-blue-500 text-white rounded py-2 text-sm hover:bg-blue-600 transition"
               >
-                Log in
+                Sign Up
               </button>
             </form>
-            <div className="mt-6 text-center">
-              <div className="relative flex items-center justify-center my-4">
-                <span className="absolute bg-white px-2 text-gray-500 text-xs font-medium">
-                  OR
-                </span>
-                <span className="w-full h-px bg-gray-300"></span>
-              </div>
-              <p className="text-blue-800 text-sm font-medium cursor-pointer flex items-center justify-center">
-                <i className="fab fa-facebook-square mr-2 text-base"></i>
-                Login with Facebook
-              </p>
-              <a
-                href="#"
-                className="block mt-4 text-blue-900 text-xs hover:underline"
-              >
-                Forgot password?
-              </a>
-            </div>
           </div>
 
-          {/* Sign Up Box */}
+          {/* Login Box */}
           <div className="bg-white border border-gray-300 rounded-sm w-full p-4 text-center">
             <p className="text-sm">
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <a
-                href="/sign-up" // Updated to link to /sign-up
+                href="/login"
                 className="text-blue-500 font-medium hover:underline"
               >
-                Sign up
+                Log in
               </a>
             </p>
           </div>
@@ -186,4 +168,4 @@ const InstagramLogin = () => {
   );
 };
 
-export default InstagramLogin;
+export default InstagramSignup;
