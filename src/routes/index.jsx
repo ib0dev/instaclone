@@ -1,14 +1,15 @@
 import { createBrowserRouter } from "react-router";
 import MainLayout from "../layouts/main";
-import Home from '../pages/home'
-import Search from '../pages/search'
-import Explore from '../pages/explore'
-import Reels from '../pages/reels'
-import Messages from '../pages/messages'
-import Notifications from '../pages/notifications'
-import Create from '../pages/create'
-import Profile from '../pages/profile'
-import More from '../pages/more'
+import Home from "@/pages/home";
+import Search from "@/pages/search";
+import Explore from "@/pages/explore";
+import Reels from "@/pages/reels";
+import Messages from "@/pages/messages";
+import Notifications from "@/pages/notifications";
+import Create from "@/pages/create";
+import Profile from "@/pages/profile";
+import More from "@/pages/more";
+import InstagramLogin from "@/pages/log-in";
 
 const routes = createBrowserRouter([
   {
@@ -20,40 +21,42 @@ const routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: 'search',
+        path: "search",
         element: <Search />,
       },
       {
-        path: 'explore',
+        path: "explore",
         element: <Explore />,
       },
       {
-        path: 'reels',
+        path: "reels",
         element: <Reels />,
       },
       {
-        path: 'messages',
+        path: "messages",
         element: <Messages />,
       },
       {
-        path: 'notifications',
+        path: "notifications",
         element: <Notifications />,
       },
       {
-        path: 'create',
+        path: "create",
         element: <Create />,
       },
       {
-        path: 'profile',
+        path: "profile",
         element: <Profile />,
       },
       {
-        path: 'more',
+        path: "more",
         element: <More />,
       },
-      
-      
     ],
+  },
+  {
+    path: "/login",
+    element: <InstagramLogin />,
   },
 ]);
 

@@ -1,4 +1,4 @@
-import { RightMenu } from "../../../utils/consts";
+import { RightMenu } from "@/utils/consts";
 
 function RightBar() {
 

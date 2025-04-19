@@ -4,4 +4,11 @@ import tailwindcss from "@tailwindcss/vite"
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(),tailwindcss()],
+  resolve:{
+    alias:{
+      path:"path-browserify",
+      "@":"/src",
+      "source-map-js":"source-map"
+    }
+  }
 })

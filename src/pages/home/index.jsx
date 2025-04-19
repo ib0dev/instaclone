@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getDocs } from "firebase/firestore";
-import { postsCollection } from "./../../firebase/db";
-import PostCard from "../../components/PostCard";
+import { postsCollection } from "@/firebase/db";
+import PostCard from "@/components/PostCard";
 
 function Home() {
   const [posts, setPosts] = useState([]);
