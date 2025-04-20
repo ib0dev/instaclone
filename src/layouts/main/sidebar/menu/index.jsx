@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router";
-import { IoClose } from "react-icons/io5";
 import {
   Button,
   Description,
@@ -24,19 +23,10 @@ import {
   ThreadsIcon,
 } from "@/assets/icons/allicons";
 import { mainMenu } from "@/utils/consts";
-import useTheme from "@/hooks/useTheme";
-import { clsx } from "clsx";
-import { CreateIcon, MorePostIcon, MediaIcon } from "@/assets/icons/allicons";
-import useClickOutside from "@/hooks/use-click-outside";
-import PopoverMenuItem from "../../../../components/PopoverMenuItem";
+import { CreateIcon, MediaIcon } from "@/assets/icons/allicons";
+import PopoverMenuItem from "@/components/PopoverMenuItem";
+import ThemeModal from "@/components/ThemeModal";
 function SidebarMenu() {
-  const { theme, changeTheme } = useTheme();
-
-  const isDark = theme === "dark";
-  const toggleTheme = () => {
-    changeTheme(theme === "dark" ? "light" : "dark");
-  };
-
   const [showAppearancePanel, setShowAppearancePanel] = useState(false);
 
   const toggleAppearancePanel = (e) => {
@@ -58,7 +48,6 @@ function SidebarMenu() {
     setIsOpen(false);
   }
 
-  const ref = useClickOutside(() => closeAppearancePanel());
 
   return (
     <div className="flex flex-col justify-between">
@@ -164,40 +153,7 @@ function SidebarMenu() {
           </PopoverPanel>
         </Popover>
         {showAppearancePanel && (
-          <div
-            className="absolute bottom-[230px] left-[260px] z-10 w-[230px] bg-[#353535] p-4 rounded-xl shadow-lg"
-            ref={ref}
-          >
-            <Field>
-              <Label className="text-sm/6 font-medium text-white flex items-center justify-between">
-                <div>Theme</div>
-                <IoClose
-                  className="size-4 fill-white/60"
-                  aria-hidden="true"
-                  onClick={closeAppearancePanel}
-                />
-              </Label>
-              <Description className="text-sm/6 text-white/50">
-                Choose theme appearance
-              </Description>
-              <div className="relative mt-3">
-                <Switch
-                  checked={isDark}
-                  onChange={toggleTheme}
-                  className={clsx(
-                    "group relative flex h-7 w-14 cursor-pointer rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none",
-                    isDark ? "bg-white/20" : "bg-white/10"
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white ring-0 shadow-lg transition duration-200 ease-in-out group-data-[checked]:translate-x-7"
-                  />
-                </Switch>
-                
-              </div>
-            </Field>
-          </div>
+          <ThemeModal onClick={closeAppearancePanel} />
         )}
       </div>
     </div>
