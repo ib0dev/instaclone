@@ -194,17 +194,7 @@ function SidebarMenu() {
                     className="pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white ring-0 shadow-lg transition duration-200 ease-in-out group-data-[checked]:translate-x-7"
                   />
                 </Switch>
-                {/* <Select
-                  onChange={(e) => changeTheme(e.target.value)}
-                  className={clsx(
-                    "block w-full appearance-none rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                    "focus:outline-none"
-                  )}
-                >
-                  <option value="dark">Dark</option>
-                  <option value="light">Light</option>
-                  <option value="system">System</option>
-                </Select> */}
+                
               </div>
             </Field>
           </div>
