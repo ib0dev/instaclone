@@ -51,7 +51,7 @@ function SidebarMenu() {
     setIsOpen(false);
   }
 
-  const ref = useClickOutside(() => {close})
+  const ref = useClickOutside(() => closeAppearancePanel())
 
   return (
     <div className="flex flex-col justify-between">
@@ -157,7 +157,7 @@ function SidebarMenu() {
               Log out
             </button>
           </PopoverPanel>
-        </Popover>
+        </Popover >
         {showAppearancePanel && (
           <div className="absolute bottom-[230px] left-[260px] z-10 w-[230px] bg-[#353535] p-4 rounded-xl shadow-lg" ref={ref}>
             <Field>
