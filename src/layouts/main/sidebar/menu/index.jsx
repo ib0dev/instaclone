@@ -12,6 +12,7 @@ import {
   PopoverButton,
   PopoverPanel,
   Select,
+  Switch,
 } from "@headlessui/react";
 import {
   ActivityIcon,
@@ -27,8 +28,14 @@ import useTheme from "@/hooks/useTheme";
 import { clsx } from "clsx";
 import { CreateIcon, MorePostIcon, MediaIcon } from "@/assets/icons/allicons";
 import useClickOutside from "@/hooks/use-click-outside";
+import PopoverMenuItem from "../../../../components/PopoverMenuItem";
 function SidebarMenu() {
   const { theme, changeTheme } = useTheme();
+
+  const isDark = theme === "dark";
+  const toggleTheme = () => {
+    changeTheme(theme === "dark" ? "light" : "dark");
+  };
 
   const [showAppearancePanel, setShowAppearancePanel] = useState(false);
 
@@ -51,7 +58,7 @@ function SidebarMenu() {
     setIsOpen(false);
   }
 
-  const ref = useClickOutside(() => closeAppearancePanel())
+  const ref = useClickOutside(() => closeAppearancePanel());
 
   return (
     <div className="flex flex-col justify-between">
@@ -124,25 +131,23 @@ function SidebarMenu() {
             anchor="bottom"
             className="flex flex-col w-[250px] h-[388px] bg-[#262626] p-2 rounded-xl text-[14px] ml-2.5"
           >
-            <button className="flex items-center p-4 gap-3 hover:bg-[#3C3C3C] rounded-xl transition-all w-full text-left cursor-pointer">
-              <SettingsIcon />
-              Settings
-            </button>
-            <button className="flex items-center p-4 gap-3 hover:bg-[#3C3C3C] rounded-xl transition-all w-full text-left cursor-pointer">
-              <ActivityIcon />
-              Your Activity
-            </button>
-            <button className="flex items-center p-4 gap-3 hover:bg-[#3C3C3C] rounded-xl transition-all w-full text-left cursor-pointer">
-              <SavedIcon />
-              Saved
-            </button>
-            <button
-              className="flex items-center p-4 gap-3 hover:bg-[#3C3C3C] rounded-xl transition-all w-full text-left cursor-pointer"
+            <PopoverMenuItem
+              componentIcon={<SettingsIcon />}
+              componentTitle={"Settings"}
+            />
+            <PopoverMenuItem
+              componentIcon={<ActivityIcon />}
+              componentTitle={"Your Activity"}
+            />
+            <PopoverMenuItem
+              componentIcon={<SavedIcon />}
+              componentTitle={"Saved"}
+            />
+            <PopoverMenuItem
+              componentIcon={<SwitchAppearance />}
+              componentTitle={"Switch Appearance"}
               onClick={toggleAppearancePanel}
-            >
-              <SwitchAppearance />
-              Switch appearance
-            </button>
+            />
 
             <button className="flex items-center p-4 gap-3 hover:bg-[#3C3C3C] rounded-xl transition-all w-full text-left cursor-pointer">
               <ReportProblemIcon />
@@ -157,13 +162,13 @@ function SidebarMenu() {
               Log out
             </button>
           </PopoverPanel>
-        </Popover >
+        </Popover>
         {showAppearancePanel && (
-          <div className="absolute bottom-[230px] left-[260px] z-10 w-[230px] bg-[#353535] p-4 rounded-xl shadow-lg" ref={ref}>
+          <div
+            className="absolute bottom-[230px] left-[260px] z-10 w-[230px] bg-[#353535] p-4 rounded-xl shadow-lg"
+            ref={ref}
+          >
             <Field>
-              <div className="p-6 bg-white text-black dark:bg-black dark:text-white">
-                <h1 className="text-2xl font-bold">Hello Theme!</h1>
-              </div>
               <Label className="text-sm/6 font-medium text-white flex items-center justify-between">
                 <div>Theme</div>
                 <IoClose
@@ -176,7 +181,20 @@ function SidebarMenu() {
                 Choose theme appearance
               </Description>
               <div className="relative mt-3">
-                <Select
+                <Switch
+                  checked={isDark}
+                  onChange={toggleTheme}
+                  className={clsx(
+                    "group relative flex h-7 w-14 cursor-pointer rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none",
+                    isDark ? "bg-white/20" : "bg-white/10"
+                  )}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white ring-0 shadow-lg transition duration-200 ease-in-out group-data-[checked]:translate-x-7"
+                  />
+                </Switch>
+                {/* <Select
                   onChange={(e) => changeTheme(e.target.value)}
                   className={clsx(
                     "block w-full appearance-none rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
@@ -186,7 +204,7 @@ function SidebarMenu() {
                   <option value="dark">Dark</option>
                   <option value="light">Light</option>
                   <option value="system">System</option>
-                </Select>
+                </Select> */}
               </div>
             </Field>
           </div>
