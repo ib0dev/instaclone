@@ -1,20 +1,21 @@
 import React, { useState } from "react";
-import { auth } from "../../firebase/config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signUp } from "../../firebase/auth"; // Import signUp from auth.js
 import { useNavigate } from "react-router";
 
 const InstagramSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [userName, setUserName] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signUp(email, password,fullName,userName); 
       console.log("User signed up successfully");
-      navigate("/"); // Redirect to home page after signup
+      navigate("/");
     } catch (err) {
       setError(err.message);
       console.error("Signup error:", err.message);
@@ -24,17 +25,7 @@ const InstagramSignup = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 text-black flex-col">
       <div className="flex flex-col md:flex-row items-center justify-center max-w-4xl w-full">
-        {/* Image Section */}
-        <div className="hidden md:block mr-8">
-          <a href="https://imgbb.com/">
-            <img
-              src="https://i.ibb.co/Q8X79RK/image.png"
-              alt="instagram"
-              className="w-96"
-            />
-          </a>
-        </div>
-
+    
         {/* Content Section */}
         <div className="flex flex-col items-center w-full max-w-sm">
           {/* Signup Box */}
@@ -69,6 +60,28 @@ const InstagramSignup = () => {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  required
+                  className="w-full bg-gray-50 border border-gray-300 rounded-sm px-2 py-3 text-[12px] focus:outline-none peer"
+                  id="fullname"
+                  placeholder="Full Name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  required
+                  className="w-full bg-gray-50 border border-gray-300 rounded-sm px-2 py-3 text-[12px] focus:outline-none peer"
+                  id="username"
+                  placeholder="Username"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
                 />
               </div>
               {error && (

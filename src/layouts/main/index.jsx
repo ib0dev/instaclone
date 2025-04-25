@@ -1,9 +1,13 @@
 import React from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import Sidebar from "./sidebar/index";
 import RightBar from "./rightbar/index";
 
 function MainLayout() {
+  const location = useLocation();
+  const hideRightBarOn = ["/profile"]; // You can add more paths to this array if needed
+  const shouldHideRightBar = hideRightBarOn.includes(location.pathname);
+
   return (
     <div className="w-[1520px] mx-auto flex">
       <div className="border-r border-[#2f3336] fixed top-0 h-screen w-[250px]">
@@ -14,9 +18,11 @@ function MainLayout() {
           <div className="w-[630px] h-svh">
             <Outlet />
           </div>
-          <div className="w-[320px]">
-            <RightBar />
-          </div>
+          {!shouldHideRightBar && (
+            <div className="w-[320px]">
+              <RightBar />
+            </div>
+          )}
         </div>
       </main>
     </div>
