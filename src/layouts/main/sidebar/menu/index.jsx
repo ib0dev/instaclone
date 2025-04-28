@@ -1,17 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router";
 import {
   Button,
-  Description,
   Dialog,
   DialogPanel,
-  Field,
-  Label,
   Popover,
   PopoverButton,
   PopoverPanel,
-  Select,
-  Switch,
 } from "@headlessui/react";
 import {
   ActivityIcon,
@@ -30,7 +25,6 @@ import { ProfileIcon } from "../../../../assets/icons/allicons";
 import { logOut } from "../../../../firebase/auth";
 function SidebarMenu() {
   const [showAppearancePanel, setShowAppearancePanel] = useState(false);
-
   const toggleAppearancePanel = (e) => {
     e.stopPropagation();
     setShowAppearancePanel((prev) => !prev);
@@ -76,13 +70,16 @@ function SidebarMenu() {
             Create
           </div>
         </Button>
-        
-          <NavLink to="profile" className="flex gap-4 hover:bg-[#1a1a1a] rounded-xl transition-all p-3 m-0.5">
-            <div className="flex gap-4">
-              <ProfileIcon />
-              Profile
-            </div>
-          </NavLink>
+
+        <NavLink
+          to="profile"
+          className="flex gap-4 hover:bg-[#1a1a1a] rounded-xl transition-all p-3 m-0.5"
+        >
+          <div className="flex gap-4">
+            <ProfileIcon />
+            Profile
+          </div>
+        </NavLink>
 
         <Dialog
           open={isOpen}
@@ -155,7 +152,10 @@ function SidebarMenu() {
               Switch Accounts
             </button>
             <div className="w-full h-[3px] bg-[#353535]"></div>
-            <button className="flex items-center p-4 gap-3 hover:bg-[#3C3C3C] rounded-xl transition-all w-full text-left cursor-pointer" onClick={() => logOut()}>
+            <button
+              className="flex items-center p-4 gap-3 hover:bg-[#3C3C3C] rounded-xl transition-all w-full text-left cursor-pointer"
+              onClick={() => logOut()}
+            >
               Log out
             </button>
           </PopoverPanel>
