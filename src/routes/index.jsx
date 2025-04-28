@@ -19,7 +19,9 @@ const RootRedirect = () => {
   const { currentUser, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div
+      className="h-svh flex justify-center items-center"
+    >Loading...</div>;
   }
 
   return <Navigate to={currentUser ? "/" : "/login"} replace />;

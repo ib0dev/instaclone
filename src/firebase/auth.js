@@ -1,17 +1,30 @@
-// auth.js
 import { auth } from "./config";
-import { db } from "./db"; // Import db from db.js
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { db } from "./db";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-// Reusable function to add user to Firestore
-async function addUserToFirestore(user, fullName, userName) {
+const storage = getStorage();
+
+async function addUserToFirestore(
+  user,
+  fullName,
+  userName,
+  posts,
+  profilePicture
+) {
   try {
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       email: user.email,
       fullName: fullName,
       userName: userName,
+      posts: posts || [],
+      profilePicture: profilePicture || "",
       createdAt: new Date(),
     });
   } catch (error) {
@@ -20,20 +33,70 @@ async function addUserToFirestore(user, fullName, userName) {
   }
 }
 
-// Updated signUp function
-export async function signUp(email, password, fullName, userName) {
+export async function signUp(
+  email,
+  password,
+  fullName,
+  userName,
+  posts,
+  profilePictureFile
+) {
   try {
-    // Create user with email and password
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const user = userCredential.user;
 
-    // Add user to Firestore with additional fields
-    await addUserToFirestore(user, fullName, userName);
+    let profilePictureUrl = "";
+    if (profilePictureFile) {
+      const storageRef = ref(storage, `profilePictures/${user.uid}`);
+      await uploadBytes(storageRef, profilePictureFile);
+      profilePictureUrl = await getDownloadURL(storageRef);
+    }
+
+    const initialPosts =
+      posts && posts.length > 0
+        ? posts
+        : [
+            {
+              content: `Welcome post by ${userName}!`,
+              createdAt: new Date(),
+              likes: 0,
+            },
+          ];
+
+    await addUserToFirestore(
+      user,
+      fullName,
+      userName,
+      initialPosts,
+      profilePictureUrl
+    );
 
     return user;
   } catch (error) {
     console.error("Error during signup: ", error);
-    throw error; // Let the caller handle the error
+    throw error;
+  }
+}
+
+export async function updateProfilePicture(userId, profilePictureFile) {
+  try {
+    const storageRef = ref(storage, `profilePictures/${userId}`);
+    await uploadBytes(storageRef, profilePictureFile);
+    const profilePictureUrl = await getDownloadURL(storageRef);
+
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
+      profilePicture: profilePictureUrl,
+    });
+
+    return profilePictureUrl;
+  } catch (error) {
+    console.error("Error updating profile picture: ", error);
+    throw error;
   }
 }
 
@@ -43,16 +106,13 @@ export async function logOut() {
     console.log("User signed out successfully");
   } catch (error) {
     console.error("Error during logout: ", error);
-    throw error; // Let the caller handle the error
+    throw error;
   }
 }
 
-// Optional: Keep onAuthStateChanged for general user state monitoring
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("User is signed in:", user.uid);
-    // You can optionally call addUserToFirestore here for safety
-    // addUserToFirestore(user);
   } else {
     console.log("No user signed in");
   }

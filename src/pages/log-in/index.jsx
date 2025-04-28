@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { auth } from "../../firebase/config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
+import {FaRegEye, FaRegEyeSlash} from 'react-icons/fa'
+import clsx from "clsx";
 
 const InstagramLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in successfully");
@@ -18,6 +25,8 @@ const InstagramLogin = () => {
     } catch (err) {
       setError(err.message);
       console.error("Login error:", err.message);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -62,7 +71,7 @@ const InstagramLogin = () => {
               </div>
               <div className="relative">
                 <input
-                  type="password"
+                  type={isPasswordVisible ? "text" : "password"}
                   required
                   className="w-full bg-gray-50 border border-gray-300 rounded-sm px-2 py-3 text-[12px] focus:outline-none peer"
                   id="password"
@@ -70,15 +79,23 @@ const InstagramLogin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2" onClick={
+                  () => setIsPasswordVisible(!isPasswordVisible)
+                }>
+                  {
+                    isPasswordVisible ? <FaRegEyeSlash className="size-5 cursor-pointer text-gray-800"/> : 
+                    <FaRegEye className="size-5 cursor-pointer text-gray-800"/>
+                  }
+                </div>
               </div>
               {error && (
                 <p className="text-red-500 text-xs text-center">{error}</p>
               )}
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white rounded py-2 text-sm hover:bg-blue-600 transition"
+                className={clsx("w-full bg-blue-500 text-white rounded py-2 text-sm hover:bg-blue-600 transition cursor-pointer", isLoading && "opacity-75")}
               >
-                Log in
+                {isLoading ? "Logging in..." : "Log in"}
               </button>
             </form>
             <div className="mt-6 text-center">

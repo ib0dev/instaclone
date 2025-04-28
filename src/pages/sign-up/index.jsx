@@ -10,6 +10,7 @@ const InstagramSignup = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  /* TODO: loading */
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
@@ -63,6 +64,7 @@ const InstagramSignup = () => {
                 />
               </div>
               <div className="relative">
+                {/* TODO: eye icon */}
                 <input
                   type="text"
                   required

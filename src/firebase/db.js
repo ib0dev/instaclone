@@ -1,4 +1,3 @@
-// src/firebase/db.js
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import app from "./config";
 
