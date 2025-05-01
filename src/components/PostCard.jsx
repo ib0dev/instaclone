@@ -1,4 +1,3 @@
-import React from "react";
 import { CommentIcon, LikeIcon, MorePostIcon, SaveIcon, ShareIcon } from "@/assets/icons/allicons";
 
 function PostCard({postUserName,postProfileImg,postImageUrl,likes,comments,postCap}) {

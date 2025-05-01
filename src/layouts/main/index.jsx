@@ -15,7 +15,7 @@ function MainLayout() {
       </div>
       <main className="flex-1 flex justify-center ml-[250px]">
         <div className="w-[950px] flex">
-          <div className="w-[630px] h-svh">
+          <div className="w-[950px] h-svh">
             <Outlet />
           </div>
           {!shouldHideRightBar && (

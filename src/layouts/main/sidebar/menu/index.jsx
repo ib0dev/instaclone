@@ -2,8 +2,6 @@ import { useState } from "react";
 import { NavLink } from "react-router";
 import {
   Button,
-  Dialog,
-  DialogPanel,
   Popover,
   PopoverButton,
   PopoverPanel,
@@ -18,11 +16,12 @@ import {
   ThreadsIcon,
 } from "@/assets/icons/allicons";
 import { mainMenu } from "@/utils/consts";
-import { CreateIcon, MediaIcon } from "@/assets/icons/allicons";
+import { CreateIcon} from "@/assets/icons/allicons";
 import PopoverMenuItem from "@/components/PopoverMenuItem";
 import ThemeModal from "@/components/ThemeModal";
 import { ProfileIcon } from "../../../../assets/icons/allicons";
 import { logOut } from "../../../../firebase/auth";
+import CreateComponent from "../../../../components/CreateComponent";
 function SidebarMenu() {
   const [showAppearancePanel, setShowAppearancePanel] = useState(false);
   const toggleAppearancePanel = (e) => {
@@ -81,31 +80,7 @@ function SidebarMenu() {
           </div>
         </NavLink>
 
-        <Dialog
-          open={isOpen}
-          as="div"
-          className="relative z-10 focus:outline-none"
-          onClose={close}
-        >
-          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 flex-col">
-              <DialogPanel
-                transition
-                className="w-[537px] h-[543px] bg-[#262626] flex justify-center flex-col items-center"
-              >
-                <p className="mt-2 text-sm/6 text-white/50">
-                  <MediaIcon />
-                </p>
-                <p className="text-xl ">Drag photos and videos here</p>
-                <div className="mt-4">
-                  <Button className="inline-flex items-center gap-2 rounded-md py-1.5 px-3 text-sm/6 font-semibold bg-[#0095f6] shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-[#1877F2] data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700">
-                    Select From Computer
-                  </Button>
-                </div>
-              </DialogPanel>
-            </div>
-          </div>
-        </Dialog>
+        <CreateComponent isOpen={isOpen} close={close}/>
       </div>
       <div className="flex flex-col mx-1 gap-1 mt-10">
         <button className="flex gap-4 hover:bg-[#1a1a1a] rounded-xl transition-all p-3 m-0.5 w-full text-left cursor-pointer">

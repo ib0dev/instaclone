@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 import { db } from "../../firebase/db";
 import { doc, getDoc } from "firebase/firestore";
 import { auth } from "../../firebase/config";
+import { updateProfilePicture } from "../../firebase/auth"; // Import the updateProfilePicture function
+import Posts from "../../components/Posts";
+
 function Profile() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [file, setFile] = useState(null); // State for the selected file
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -25,6 +29,40 @@ function Profile() {
     fetchUserData();
   }, []);
 
+  // Handle file input change
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  // Handle profile picture update
+  const handleUpdateProfilePicture = async () => {
+    if (!file) {
+      alert("Please select a file first!");
+      return;
+    }
+    setLoading(true);
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const newProfilePictureUrl = await updateProfilePicture(user.uid, file);
+        // Update userData state with the new profile picture URL
+        setUserData((prev) => ({
+          ...prev,
+          profilePicture: newProfilePictureUrl,
+        }));
+        alert("Profile picture updated successfully!");
+      }
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      alert("Failed to update profile picture.");
+    } finally {
+      setLoading(false);
+      setFile(null); // Clear the file input
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -34,24 +72,41 @@ function Profile() {
   }
 
   return (
-    <div className="min-h-screen font-sans  pb-12">
+    <div className="min-h-screen font-sans pb-12">
       <header>
-        <div className=" mx-auto px-4">
+        <div className="mx-auto px-4">
           <div className="pt-12 pb-8 @supports (display: grid) { grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-x-8 items-center }">
             <div className="flex justify-center md:justify-start mb-4 md:mb-0">
               <img
-                src={userData.profilePicture}
+                src={
+                  userData.profilePicture
+                    ? userData.profilePicture
+                    : "/src/assets/images/nopp.jpg"
+                }
                 alt="Profile"
                 className="rounded-full w-24 h-24 md:w-32 md:h-32 object-cover"
               />
             </div>
             <div>
-              <div className="flex flex-wrap items-center mb-6">
+              <div className="flex items-center mb-6">
                 <h1 className="text-3xl md:text-4xl font-light mr-4">
                   {userData.userName}
                 </h1>
-                <button className="border border-gray-300 rounded px-4 py-1 text-sm font-semibold mt-2 md:mt-0">
-                  Edit Profile
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="bg-[#363636] px-4 rounded-[8px] py-1 font-semibold"
+                />
+                <button
+                  onClick={handleUpdateProfilePicture}
+                  className="bg-[#363636] px-4 rounded-[8px] py-1 font-semibold ml-2"
+                  disabled={!file || loading}
+                >
+                  Update Picture
+                </button>
+                <button className="bg-[#363636] px-4 rounded-[8px] py-1 font-semibold ml-2">
+                  View Archive
                 </button>
                 <button
                   className="ml-2 text-2xl mt-2 md:mt-0"
@@ -62,14 +117,16 @@ function Profile() {
               </div>
               <ul className="flex space-x-8 mb-6 text-base md:text-lg">
                 <li>
-                  <span className="font-semibold">{userData.posts.length}</span>{" "}
-                  posts
+                  <span className="font-semibold">{userData.posts.length}</span>
+                  <span className="text-[#A7A7A7]"> posts</span>
                 </li>
                 <li>
-                  <span className="font-semibold">188</span> followers
+                  <span className="font-semibold">188</span>
+                  <span className="text-[#A7A7A7]"> followers</span>
                 </li>
                 <li>
-                  <span className="font-semibold">206</span> following
+                  <span className="font-semibold">206</span>
+                  <span className="text-[#A7A7A7]"> following</span>
                 </li>
               </ul>
               <p className="text-base md:text-lg">
@@ -79,31 +136,8 @@ function Profile() {
           </div>
         </div>
       </header>
-      <main>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex flex-wrap -mx-2 pb-12 md:@supports (display: grid) { grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 }">
-            {userData.posts.map((post, index) => (
-              <div
-                key={index}
-                className="relative m-2 md:m-0 flex-1 min-w-[200px] max-w-[300px] md:max-w-none"
-                tabIndex="0"
-              >
-                <img
-                  src={post.postImage}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity">
-                  <ul className="flex space-x-4 text-white text-lg font-semibold">
-                    <li>
-                      <i className="fas fa-heart"></i> {post.likes}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
+      <div className="w-full h-[1px] bg-[#353535]"></div>
+      <Posts userData={userData} />
     </div>
   );
 }

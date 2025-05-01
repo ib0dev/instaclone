@@ -6,7 +6,6 @@ import Explore from "../pages/explore";
 import Reels from "../pages/reels";
 import Messages from "../pages/messages";
 import Notifications from "../pages/notifications";
-import Create from "../pages/create";
 import Profile from "../pages/profile";
 import More from "../pages/more";
 import InstagramLogin from "../pages/log-in";
@@ -63,10 +62,6 @@ const routes = createBrowserRouter([
       {
         path: "notifications",
         element: <Notifications />,
-      },
-      {
-        path: "create",
-        element: <Create />,
       },
       {
         path: "profile",
