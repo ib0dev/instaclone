@@ -16,12 +16,13 @@ import {
   ThreadsIcon,
 } from "@/assets/icons/allicons";
 import { mainMenu } from "@/utils/consts";
-import { CreateIcon} from "@/assets/icons/allicons";
+import { CreateIcon } from "@/assets/icons/allicons";
 import PopoverMenuItem from "@/components/PopoverMenuItem";
 import ThemeModal from "@/components/ThemeModal";
-import { ProfileIcon } from "../../../../assets/icons/allicons";
-import { logOut } from "../../../../firebase/auth";
-import CreateComponent from "../../../../components/CreateComponent";
+import { ProfileIcon } from "@/assets/icons/allicons";
+import { logOut } from "@/supabase/auth";
+import CreateComponent from "@/components/CreateComponent";
+
 function SidebarMenu() {
   const [showAppearancePanel, setShowAppearancePanel] = useState(false);
   const toggleAppearancePanel = (e) => {
@@ -80,7 +81,7 @@ function SidebarMenu() {
           </div>
         </NavLink>
 
-        <CreateComponent isOpen={isOpen} close={close}/>
+        <CreateComponent isOpen={isOpen} close={close} />
       </div>
       <div className="flex flex-col mx-1 gap-1 mt-10">
         <button className="flex gap-4 hover:bg-[#1a1a1a] rounded-xl transition-all p-3 m-0.5 w-full text-left cursor-pointer">

@@ -1,5 +1,6 @@
 
 function Posts({userData}) {
+  console.log(userData.posts);
   return (
      <main className="mt-10">
      <div className="max-w-6xl mx-auto px-4">
@@ -11,13 +12,13 @@ function Posts({userData}) {
              tabIndex="0"
            >
              <img
-               src={post.postImage}
+               src={post.media_url}
                className="w-full h-full object-cover"
              />
              <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity">
                <ul className="flex space-x-4 text-white text-lg font-semibold">
                  <li>
-                   <i className="fas fa-heart"></i> {post.likes}
+                   <i className="fas fa-heart"></i> {post.likes || 0}
                  </li>
                </ul>
              </div>

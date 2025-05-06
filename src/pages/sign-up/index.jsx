@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { signUp } from "../../firebase/auth"; // Import signUp from auth.js
+import { useState } from "react";
+import { signUp } from "../../supabase/auth";
 import { useNavigate } from "react-router";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import clsx from "clsx";
 
 const InstagramSignup = () => {
   const [email, setEmail] = useState("");
@@ -8,25 +10,28 @@ const InstagramSignup = () => {
   const [fullName, setFullName] = useState("");
   const [userName, setUserName] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
-  /* TODO: loading */
   const handleSignup = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
-      await signUp(email, password,fullName,userName); 
+      await signUp(email, password, fullName, userName);
       console.log("User signed up successfully");
       navigate("/");
     } catch (err) {
       setError(err.message);
       console.error("Signup error:", err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 text-black flex-col">
       <div className="flex flex-col md:flex-row items-center justify-center max-w-4xl w-full">
-    
         {/* Content Section */}
         <div className="flex flex-col items-center w-full max-w-sm">
           {/* Signup Box */}
@@ -43,7 +48,7 @@ const InstagramSignup = () => {
             <form onSubmit={handleSignup} className="space-y-4">
               <div className="relative">
                 <input
-                  type="email"
+                type="email"
                   required
                   className="w-full bg-gray-50 border border-gray-300 rounded-sm px-2 py-3 text-[12px] focus:outline-none peer"
                   id="email"
@@ -54,7 +59,7 @@ const InstagramSignup = () => {
               </div>
               <div className="relative">
                 <input
-                  type="password"
+                  type={isPasswordVisible ? "text" : "password"}
                   required
                   className="w-full bg-gray-50 border border-gray-300 rounded-sm px-2 py-3 text-[12px] focus:outline-none peer"
                   id="password"
@@ -62,9 +67,18 @@ const InstagramSignup = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <div
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                >
+                  {isPasswordVisible ? (
+                    <FaRegEyeSlash className="size-5 cursor-pointer text-gray-800" />
+                  ) : (
+                    <FaRegEye className="size-5 cursor-pointer text-gray-800" />
+                  )}
+                </div>
               </div>
               <div className="relative">
-                {/* TODO: eye icon */}
                 <input
                   type="text"
                   required
@@ -91,9 +105,13 @@ const InstagramSignup = () => {
               )}
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white rounded py-2 text-sm hover:bg-blue-600 transition"
+                className={clsx(
+                  "w-full bg-blue-500 text-white rounded py-2 text-sm hover:bg-blue-600 transition",
+                  isLoading && "opacity-75"
+                )}
+                disabled={isLoading}
               >
-                Sign Up
+                {isLoading ? "Signing up..." : "Sign Up"}
               </button>
             </form>
           </div>

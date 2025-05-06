@@ -1,32 +1,34 @@
 import { useState } from "react";
-import { auth } from "../../firebase/config";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { supabase } from "../../supabase/config";
 import { useNavigate } from "react-router";
-import {FaRegEye, FaRegEyeSlash} from 'react-icons/fa'
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import clsx from "clsx";
 
 const InstagramLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
       console.log("User logged in successfully");
       navigate("/");
     } catch (err) {
       setError(err.message);
       console.error("Login error:", err.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -79,13 +81,15 @@ const InstagramLogin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2" onClick={
-                  () => setIsPasswordVisible(!isPasswordVisible)
-                }>
-                  {
-                    isPasswordVisible ? <FaRegEyeSlash className="size-5 cursor-pointer text-gray-800"/> : 
-                    <FaRegEye className="size-5 cursor-pointer text-gray-800"/>
-                  }
+                <div
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                >
+                  {isPasswordVisible ? (
+                    <FaRegEyeSlash className="size-5 cursor-pointer text-gray-800" />
+                  ) : (
+                    <FaRegEye className="size-5 cursor-pointer text-gray-800" />
+                  )}
                 </div>
               </div>
               {error && (
@@ -93,7 +97,11 @@ const InstagramLogin = () => {
               )}
               <button
                 type="submit"
-                className={clsx("w-full bg-blue-500 text-white rounded py-2 text-sm hover:bg-blue-600 transition cursor-pointer", isLoading && "opacity-75")}
+                className={clsx(
+                  "w-full bg-blue-500 text-white rounded py-2 text-sm hover:bg-blue-600 transition cursor-pointer",
+                  isLoading && "opacity-75"
+                )}
+                disabled={isLoading}
               >
                 {isLoading ? "Logging in..." : "Log in"}
               </button>
@@ -123,7 +131,7 @@ const InstagramLogin = () => {
             <p className="text-sm">
               Don't have an account?{" "}
               <a
-                href="/sign-up" // Updated to link to /sign-up
+                href="/sign-up"
                 className="text-blue-500 font-medium hover:underline"
               >
                 Sign up

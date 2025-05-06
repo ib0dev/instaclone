@@ -38,7 +38,7 @@ function PostCard({postUserName,postProfileImg,postImageUrl,likes,comments,postC
           <div className="text-sm font-semibold">{postUserName}</div>
           <div className="text-sm">{postCap}</div>
         </div>
-        <div className="text-sm text-[#A8A8A8] mt-1">View all {comments.length} comments</div>
+        <div className="text-sm text-[#A8A8A8] mt-1">View all {comments} comments</div>
       </div>
     </div>
   );
