@@ -22,7 +22,6 @@ const InstagramLogin = () => {
         password,
       });
       if (error) throw error;
-      console.log("User logged in successfully");
       navigate("/");
     } catch (err) {
       setError(err.message);

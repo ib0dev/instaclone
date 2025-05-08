@@ -1,6 +1,6 @@
 import { CommentIcon, LikeIcon, MorePostIcon, SaveIcon, ShareIcon } from "@/assets/icons/allicons";
 
-function PostCard({postUserName,postProfileImg,postImageUrl,likes,comments,postCap}) {
+function PostCard({postUserName,postProfileImg,postImageUrl,initialLikes,comments,postCap}) {
   return (
     <div id="card" className="w-[470px] mt-4">
       <div>
@@ -33,7 +33,7 @@ function PostCard({postUserName,postProfileImg,postImageUrl,likes,comments,postC
             <SaveIcon />
           </div>
         </div>
-        <div className="text-sm font-semibold mt-4">{likes} likes</div>
+        <div className="text-sm font-semibold mt-4">{initialLikes} likes</div>
         <div className="flex gap-1">
           <div className="text-sm font-semibold">{postUserName}</div>
           <div className="text-sm">{postCap}</div>

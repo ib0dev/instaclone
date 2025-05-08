@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../../supabase/config';
-import { updateProfilePicture } from '../../supabase/auth';
-import Posts from '../../components/Posts';
+import { useState, useEffect } from "react";
+import { supabase } from "@/supabase/config";
+import { updateProfilePicture } from "@/supabase/auth";
+import Posts from "@/components/Posts";
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -10,46 +10,49 @@ function Profile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
       if (authError) {
-        console.error('Error fetching user:', authError);
+        console.error("Error fetching user:", authError);
         setLoading(false);
         return;
       }
       if (user) {
         try {
           const { data: userDoc, error: userError } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', user.id)
+            .from("users")
+            .select("*")
+            .eq("id", user.id)
             .single();
-            if (userError) throw userError;
-            
-            const { data: posts, error: postsError } = await supabase
-            .from('posts')
-            .select('*')
-            .eq('user_id', user.id);
+          if (userError) throw userError;
+
+          const { data: posts, error: postsError } = await supabase
+            .from("posts")
+            .select("*")
+            .eq("user_id", user.id);
           if (postsError) throw postsError;
 
           const postsWithLikes = await Promise.all(
             (posts || []).map(async (post) => {
               const { count: likesCount } = await supabase
-                .from('likes')
-                .select('*', { count: 'exact' })
-                .eq('post_id', post.id);
+                .from("likes")
+                .select("*", { count: "exact" })
+                .eq("post_id", post.id);
               return { ...post, likes: likesCount || 0 };
             })
           );
-
+          console.log(postsWithLikes);
           setUserData({
             ...userDoc,
-            posts, 
-            userName: userDoc.user_name, 
+            posts: postsWithLikes,
+            userName: userDoc.user_name,
             fullName: userDoc.full_name,
             profilePicture: userDoc.profile_picture,
           });
         } catch (error) {
-          console.error('Error fetching user data:', error);
+          console.error("Error fetching user data:", error);
         } finally {
           setLoading(false);
         }
@@ -66,24 +69,26 @@ function Profile() {
 
   const handleUpdateProfilePicture = async () => {
     if (!file) {
-      alert('Please select a file first!');
+      alert("Please select a file first!");
       return;
     }
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
         const newProfilePictureUrl = await updateProfilePicture(user.id, file);
         setUserData((prev) => ({
           ...prev,
           profilePicture: newProfilePictureUrl,
-          profile_picture: newProfilePictureUrl, // Update Supabase field
+          profile_picture: newProfilePictureUrl,
         }));
-        alert('Profile picture updated successfully!');
+        alert("Profile picture updated successfully!");
       }
     } catch (error) {
-      console.error('Error updating profile picture:', error);
-      alert('Failed to update profile picture.');
+      console.error("Error updating profile picture:", error);
+      alert("Failed to update profile picture.");
     } finally {
       setLoading(false);
       setFile(null);
@@ -108,7 +113,7 @@ function Profile() {
                 src={
                   userData.profilePicture
                     ? userData.profilePicture
-                    : '/src/assets/images/nopp.jpg'
+                    : "/src/assets/images/nopp.jpg"
                 }
                 alt="Profile"
                 className="rounded-full w-24 h-24 md:w-32 md:h-32 object-cover"
@@ -116,15 +121,25 @@ function Profile() {
             </div>
             <div>
               <div className="flex items-center mb-6">
-                <h1 className="text-3xl md:text-4xl font-light mr-4">
+                <h1 className="text-3xl md:text-xl mr-4 font-semibold">
                   {userData.userName}
                 </h1>
+
                 <input
+                  id="file-upload"
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="bg-[#363636] px-4 rounded-[8px] py-1 font-semibold"
+                  className="hidden"
                 />
+
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer bg-[#363636] px-4 rounded-[8px] py-1 font-semibold w-fit"
+                >
+                  {file ? file.name : "Choose a file"}
+                </label>
+
                 <button
                   onClick={handleUpdateProfilePicture}
                   className="bg-[#363636] px-4 rounded-[8px] py-1 font-semibold ml-2"

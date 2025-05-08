@@ -349,13 +349,3 @@ export function MediaIcon() {
   );
 }
 
-export function ProfileIcon() {
-  return (
-    <img
-      className="w-[24px] h-[24px] rounded-full object-cover"
-      crossOrigin="anonymous"
-      draggable="false"
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhTOyPSYEY5Du1YdayQiHaEWtqRcEnGLn9dg&s"
-    />
-  );
-}

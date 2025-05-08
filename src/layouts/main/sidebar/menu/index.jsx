@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import {
   Button,
@@ -19,11 +19,44 @@ import { mainMenu } from "@/utils/consts";
 import { CreateIcon } from "@/assets/icons/allicons";
 import PopoverMenuItem from "@/components/PopoverMenuItem";
 import ThemeModal from "@/components/ThemeModal";
-import { ProfileIcon } from "@/assets/icons/allicons";
 import { logOut } from "@/supabase/auth";
 import CreateComponent from "@/components/CreateComponent";
+import { supabase } from '@/supabase/config';
 
 function SidebarMenu() {
+
+  const [profilePictureUrl, setProfilePictureUrl] = useState("")
+
+  useEffect(() => {
+      const fetchUserData = async () => {
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser();
+        if (authError) {
+          console.error("Error fetching user:", authError);
+          return;
+        }
+        if (user) {
+          try {
+            const { data: userDoc, error: userError } = await supabase
+              .from("users")
+              .select("*")
+              .eq("id", user.id)
+              .single();
+            if (userError) throw userError;
+  
+            setProfilePictureUrl({
+              profilePicture: userDoc.profile_picture,
+            });
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        }
+      };
+      fetchUserData();
+    }, []);
+
   const [showAppearancePanel, setShowAppearancePanel] = useState(false);
   const toggleAppearancePanel = (e) => {
     e.stopPropagation();
@@ -76,7 +109,12 @@ function SidebarMenu() {
           className="flex gap-4 hover:bg-[#1a1a1a] rounded-xl transition-all p-3 m-0.5"
         >
           <div className="flex gap-4">
-            <ProfileIcon />
+            <img
+              className="w-[24px] h-[24px] rounded-full object-cover"
+              crossOrigin="anonymous"
+              draggable="false"
+              src={profilePictureUrl ? profilePictureUrl.profilePicture : "/src/assets/images/nopp.jpg"}
+            />
             Profile
           </div>
         </NavLink>

@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet, useLocation } from "react-router";
 import Sidebar from "./sidebar/index";
 import RightBar from "./rightbar/index";
+import Stories from "@/components/Stories";
 
 function MainLayout() {
   const location = useLocation();
@@ -16,6 +17,7 @@ function MainLayout() {
       <main className="flex-1 flex justify-center ml-[250px]">
         <div className="w-[950px] flex">
           <div className="w-[950px] h-svh">
+            <Stories/>
             <Outlet />
           </div>
           {!shouldHideRightBar && (

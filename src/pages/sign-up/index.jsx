@@ -19,7 +19,6 @@ const InstagramSignup = () => {
     setIsLoading(true);
     try {
       await signUp(email, password, fullName, userName);
-      console.log("User signed up successfully");
       navigate("/");
     } catch (err) {
       setError(err.message);

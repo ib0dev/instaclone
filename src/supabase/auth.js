@@ -68,31 +68,35 @@ export async function signUp(email, password, fullName, userName, posts, profile
   }
 }
 
-export async function updateProfilePicture(userId, profilePictureFile) {
+export const updateProfilePicture = async (userId, file) => {
   try {
-    const { error } = await supabase.storage
+    // Upload file to Supabase Storage
+    const fileName = `${userId}/${Date.now()}_${file.name}`;
+    const { error: uploadError } = await supabase.storage
       .from('profile-pictures')
-      .upload(`${userId}/profile.jpg`, profilePictureFile, {
-        upsert: true,
-      });
-    if (error) throw error;
+      .upload(fileName, file);
+    if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
 
-    const { data: urlData } = supabase.storage
+    // Get the public URL
+    const { data: publicUrlData } = supabase.storage
       .from('profile-pictures')
-      .getPublicUrl(`${userId}/profile.jpg`);
+      .getPublicUrl(fileName);
+    if (!publicUrlData?.publicUrl) throw new Error("Failed to get public URL");
 
+    const newProfilePictureUrl = publicUrlData.publicUrl;
+
+    // Update the users table
     const { error: updateError } = await supabase
       .from('users')
-      .update({ profile_picture: urlData.publicUrl })
+      .update({ profile_picture: newProfilePictureUrl })
       .eq('id', userId);
-    if (updateError) throw updateError;
+    if (updateError) throw new Error(`Database update failed: ${updateError.message}`);
 
-    return urlData.publicUrl;
+    return newProfilePictureUrl;
   } catch (error) {
-    console.error('Error updating profile picture:', error);
     throw error;
   }
-}
+};
 
 export async function logOut() {
   try {

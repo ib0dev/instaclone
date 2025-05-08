@@ -12,9 +12,8 @@ function Home() {
           .from('posts')
           .select(`
             id,
-            image_url,
-            caption,
-            likes,
+            media_url,
+            content,
             created_at,
             user_id,
             users (user_name, profile_picture)
@@ -23,7 +22,6 @@ function Home() {
 
         if (error) throw error;
 
-        // Fetch comment counts for each post
         const postIds = postsData.map(post => post.id);
         const { data: commentsData, error: commentsError } = await supabase
           .from('comments')
@@ -37,15 +35,13 @@ function Home() {
           return acc;
         }, {});
 
-        // Map posts to match PostCard props
         const fetchedPosts = postsData.map(post => ({
           id: post.id,
           postProfileImg: post.users.profile_picture || '/src/assets/images/nopp.jpg',
-          postImageUrl: post.image_url,
+          postImageUrl: post.media_url,
           postUserName: post.users.user_name,
-          likes: post.likes,
-          comments: commentCounts[post.id] || 0, // Comment count
-          postCap: post.caption,
+          comments: commentCounts[post.id] || 0,
+          postCap: post.content,
         }));
 
         setPosts(fetchedPosts);
@@ -57,7 +53,6 @@ function Home() {
     fetchPosts();
   }, []);
 
-  console.log(posts);
 
   return (
     <div className="mt-4">
@@ -67,7 +62,6 @@ function Home() {
           postProfileImg={post.postProfileImg}
           postImageUrl={post.postImageUrl}
           postUserName={post.postUserName}
-          likes={post.likes}
           comments={post.comments}
           postCap={post.postCap}
         />
