@@ -21,41 +21,40 @@ import PopoverMenuItem from "@/components/PopoverMenuItem";
 import ThemeModal from "@/components/ThemeModal";
 import { logOut } from "@/supabase/auth";
 import CreateComponent from "@/components/CreateComponent";
-import { supabase } from '@/supabase/config';
+import { supabase } from "@/supabase/config";
 
 function SidebarMenu() {
-
-  const [profilePictureUrl, setProfilePictureUrl] = useState("")
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
 
   useEffect(() => {
-      const fetchUserData = async () => {
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-        if (authError) {
-          console.error("Error fetching user:", authError);
-          return;
+    const fetchUserData = async () => {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+      if (authError) {
+        console.error("Error fetching user:", authError);
+        return;
+      }
+      if (user) {
+        try {
+          const { data: userDoc, error: userError } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", user.id)
+            .single();
+          if (userError) throw userError;
+
+          setProfilePictureUrl({
+            profilePicture: userDoc.profile_picture,
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
         }
-        if (user) {
-          try {
-            const { data: userDoc, error: userError } = await supabase
-              .from("users")
-              .select("*")
-              .eq("id", user.id)
-              .single();
-            if (userError) throw userError;
-  
-            setProfilePictureUrl({
-              profilePicture: userDoc.profile_picture,
-            });
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-          }
-        }
-      };
-      fetchUserData();
-    }, []);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   const [showAppearancePanel, setShowAppearancePanel] = useState(false);
   const toggleAppearancePanel = (e) => {
@@ -113,7 +112,11 @@ function SidebarMenu() {
               className="w-[24px] h-[24px] rounded-full object-cover"
               crossOrigin="anonymous"
               draggable="false"
-              src={profilePictureUrl ? profilePictureUrl.profilePicture : "/src/assets/images/nopp.jpg"}
+              src={
+                profilePictureUrl
+                  ? profilePictureUrl.profilePicture
+                  : "/src/assets/images/nopp.jpg"
+              }
             />
             Profile
           </div>
