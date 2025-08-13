@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabase/config";
 import PostCard from "@/components/PostCard";
+import { Stories } from "./components/stories";
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -56,6 +57,7 @@ function Home() {
 
   return (
     <div className="mt-4">
+      <Stories/>
       {posts.map((post, index) => (
       <PostCard
           key={index}

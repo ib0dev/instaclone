@@ -6,7 +6,7 @@ import Stories from "@/components/Stories";
 
 function MainLayout() {
   const location = useLocation();
-  const hideRightBarOn = ["/profile"]; // You can add more paths to this array if needed
+  const hideRightBarOn = ["/profile"];
   const shouldHideRightBar = hideRightBarOn.includes(location.pathname);
 
   return (
